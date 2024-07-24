@@ -39,11 +39,11 @@ $hotels = [
     ],
 ];
 
-
+// hago una copia de mi array original, asi mi arry original queda intacto en el casod e que lo necesite, y puedo trabjar con mi array clonado
 $filteredHotels = $hotels;
 
-// BONUS
-// 1 - Aggiungere un form ad inizio pagina che tramite una richiesta GET permetta di filtrare gli hotel che hanno un parcheggio.
+// BONUS-1 - Aggiungere un form ad inizio pagina che tramite una richiesta GET permetta di filtrare gli hotel che hanno un parcheggio.
+
 //isset sirve para verificar si existe un valor en una variable, en este caso $_GET['hasAparking'], verifica si user ha ingresado un valor en el check box.
 if (isset($_GET['hasAparking'])) {
     // creo un Array vacio en donde pushare los datos que voy a filtrar
@@ -58,12 +58,25 @@ if (isset($_GET['hasAparking'])) {
     }
 }
 
- 
+//BONUS-2 - Aggiungere un secondo campo al form che permetta di filtrare gli hotel per voto (es. inserisco 3 ed ottengo tutti gli hotel che hanno un voto di tre stelle o superiore)
 
-// 2 - Aggiungere un secondo campo al form che permetta di filtrare gli hotel per voto (es. inserisco 3 ed ottengo tutti gli hotel che hanno un voto di tre stelle o superiore)
+// creo un array con los votos para inserirlos de manera dinamica
+$rankHotels = [1,2,3,4,5];
+
+//// hago una copia de mi array original, asi mi array original queda intacto en el casod e que lo necesite, y puedo trabjar con mi array clonado. 
+if (isset($_GET['rank'])) {
+    $filteredHotels = [];
+    //guardo en una variable $votes, la asignacion de los rankings 1 2 3 4 5, escribo int adelante porque el valor de mis rankings es un numero entero, seria como un parse in.
+    $votes = (int)$_GET['rank'];
+    foreach($hotels as $hotel) { //ciclo nuevamente
+        if ($hotel['vote'] <= $votes) { // impongo la condicion si vote es igual a 12345
+            $filteredHotels[] = $hotel; // si es igual pusho. 
+        }
+    }
+}
 ?>
 
-<!-- Stampare tutti i nostri hotel con tutti i dati disponibili. -->
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -78,18 +91,28 @@ if (isset($_GET['hasAparking'])) {
 
 <section class="container col-10">
     <h3>PHP Hotel</h3>
-    <!-- inserisco funzione per filtrate gli alberghi che possiedono un parchegio  -->
-
     <form action="index.php" method="GET">
         <div>
-       
+
+        <!-- check box -->
             <input type="checkbox" name="hasAparking">
             <label>Solo con parcheggio </label>
-       
         </div>
+
+         <!-- rank -->
+        <div>
+            <h5>Voto</h5>
+            <?php foreach($rankHotels as $votes): ?>
+            <input type="radio" name="rank" id="rank_<?php echo $votes ?>" value="<?php echo $votes ?>" >
+            <label><?php echo $votes ?></label>
+            <?php endforeach; ?>
+        </div>
+
+        <!-- submit  enviar inviare, debe ser submit para que envie los datos -->
         <button type="submit" class="btn btn-primary">Filtra</button>
     </form>
-    <!-- tabla -->
+
+    <!-- Stampare tutti i nostri hotel con tutti i dati disponibili. -->
         <table class="table">
             <thead>
                 <tr>
@@ -112,7 +135,7 @@ if (isset($_GET['hasAparking'])) {
                 <?php endforeach; ?>
             </tbody>
         </table>
-
+        <a href="index.php"><button  class="btn btn-primary">Reset</button></a>              
 </section>
 </body>
 
