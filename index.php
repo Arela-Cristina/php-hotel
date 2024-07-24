@@ -39,10 +39,27 @@ $hotels = [
     ],
 ];
 
-$data= $_GET;
-var_dump($data);
-// BONUS 
+
+$filteredHotels = $hotels;
+
+// BONUS
 // 1 - Aggiungere un form ad inizio pagina che tramite una richiesta GET permetta di filtrare gli hotel che hanno un parcheggio.
+//isset sirve para verificar si existe un valor en una variable, en este caso $_GET['hasAparking'], verifica si user ha ingresado un valor en el check box.
+if (isset($_GET['hasAparking'])) {
+    // creo un Array vacio en donde pushare los datos que voy a filtrar
+    $filteredHotels = [];
+    // Hago un ciclo for each para filtrar los elementos de mi array $hotels
+    foreach ($hotels as $hotel) {
+        // Luego impongo la condicion, si parking es identico a true
+        if ($hotel['parking'] === true) {
+            // lo pusho en el array nuevo, esta es la sintaxis de pushar.
+            $filteredHotels[] = $hotel;
+        }
+    }
+}
+
+ 
+
 // 2 - Aggiungere un secondo campo al form che permetta di filtrare gli hotel per voto (es. inserisco 3 ed ottengo tutti gli hotel che hanno un voto di tre stelle o superiore)
 ?>
 
@@ -61,38 +78,18 @@ var_dump($data);
 
 <section class="container col-10">
     <h3>PHP Hotel</h3>
+    <!-- inserisco funzione per filtrate gli alberghi che possiedono un parchegio  -->
+
     <form action="index.php" method="GET">
         <div>
-        <label>
-            <input type="checkbox" name="voto" value="Solo con parcheggio">
-            Solo con parcheggio
-        </label>
+       
+            <input type="checkbox" name="hasAparking">
+            <label>Solo con parcheggio </label>
+       
         </div>
-        <div>
-            <span><h5>Voto</h5></span>
-            <label>
-                <input type="radio" name="voto" value="1">
-                1
-            </label>
-            <label>
-                <input type="radio" name="voto" value="2">
-                2
-            </label>
-            <label>
-                <input type="radio" name="voto" value="3">
-                3
-            </label>
-            <label>
-                <input type="radio" name="voto" value="4">
-                4
-            </label>
-            <label>
-                <input type="radio" name="voto" value="5">
-                5
-            </label>
-        </div>
-        <button type="button" class="btn btn-primary">Filtra</button>
-    
+        <button type="submit" class="btn btn-primary">Filtra</button>
+    </form>
+    <!-- tabla -->
         <table class="table">
             <thead>
                 <tr>
@@ -104,7 +101,7 @@ var_dump($data);
                 </tr>
             </thead>
             <tbody>
-                <?php foreach($hotels as $hotel): ?>
+                <?php foreach($filteredHotels as $hotel): ?>
                 <tr>
                     <th scope="row"><?php echo $hotel['name']; ?></th>
                     <th scope="row"><?php echo $hotel['description']; ?></th>
@@ -115,7 +112,7 @@ var_dump($data);
                 <?php endforeach; ?>
             </tbody>
         </table>
-    </form>
+
 </section>
 </body>
 
